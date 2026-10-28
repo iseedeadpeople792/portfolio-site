@@ -3,8 +3,10 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { projects } from "./projects.js";
+import { L, lang, initI18n } from "./i18n.js";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
+initI18n();
 
 const pad = (n) => String(n).padStart(2, "0");
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -12,19 +14,22 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
 // Карточки проектов рисуются из данных, чтобы список менялся в одном файле.
 $("#track").innerHTML = projects
-  .map(
-    (p, i) => `
+  .map((p, i) => {
+    const e = p.en;
+    const tr = (ru, en) => L(ru, en ?? ru);
+    const tags = lang === "en" ? e.tags ?? p.tags : p.tags;
+    return `
   <article class="card" style="--a:${p.colors[0]};--b:${p.colors[1]}">
     <div class="visual"><div class="art"></div><span class="no">${pad(i + 1)}</span></div>
     <div class="body">
-      <h3>${p.title}</h3>
-      <p>${p.text}</p>
-      ${p.link ? `<a class="go" href="${p.link.href}">${p.link.label}</a>` : `<span class="soon">Исходники пока не опубликованы</span>`}
-      ${p.repo ? `<a class="repo" href="${p.repo}">Исходники на GitHub</a>` : ""}
-      <div class="tags">${p.tags.map((t) => `<span>${t}</span>`).join("")}</div>
+      <h3>${tr(p.title, e.title)}</h3>
+      <p>${tr(p.text, e.text)}</p>
+      ${p.link ? `<a class="go" href="${p.link.href}">${tr(p.link.label, p.link.labelEn ?? "Open the project site")}</a>` : `<span class="soon">${L("Исходники пока не опубликованы", "Source not published yet")}</span>`}
+      ${p.repo ? `<a class="repo" href="${p.repo}">${L("Исходники на GitHub", "Source on GitHub")}</a>` : ""}
+      <div class="tags">${tags.map((t) => `<span>${t}</span>`).join("")}</div>
     </div>
-  </article>`
-  )
+  </article>`;
+  })
   .join("");
 $("#tot").textContent = pad(projects.length);
 

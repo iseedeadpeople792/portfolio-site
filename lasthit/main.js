@@ -3,6 +3,8 @@ import "./style.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { combine } from "./calc.js";
+import { L, lang, initI18n } from "../src/i18n.js";
+initI18n();
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,7 +71,7 @@ function heroScene(motion) {
     const hit = txt("", { x: d.x, y: d.y - 40, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace", "font-size": 15, fill: "#fff", opacity: 0 }, svg);
     return { ...d, body, bar, hit };
   });
-  txt("Условная сцена: так выглядит подсказка в игре", { x: 20, y: 400, "font-family": "JetBrains Mono, monospace", "font-size": 12, fill: "#5f7766" }, svg);
+  txt(L("Условная сцена: так выглядит подсказка в игре", "Sample scene: this is how the hint looks in the game"), { x: 20, y: 400, "font-family": "JetBrains Mono, monospace", "font-size": 12, fill: "#5f7766" }, svg);
 
   items.forEach((c, i) => {
     c.bar.paint(c.from);
@@ -105,10 +107,10 @@ function stageTimeline() {
   el("rect", { width: 800, height: 450, fill: "#0a140f" }, svg);
   el("rect", { width: 800, height: 34, fill: "#07100b" }, svg);
   el("rect", { y: 392, width: 800, height: 58, fill: "#07100b" }, svg);
-  txt("Кадр игры", { x: 16, y: 22, "font-family": "JetBrains Mono, monospace", "font-size": 13, fill: "#5f7766" }, svg);
+  txt(L("Кадр игры", "Game frame"), { x: 16, y: 22, "font-family": "JetBrains Mono, monospace", "font-size": 13, fill: "#5f7766" }, svg);
   el("rect", { x: 60, y: 402, width: 150, height: 38, rx: 6, fill: "#0e1a13", stroke: "#2c4634" }, svg);
   const dmgText = txt("0", { x: 135, y: 429, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace", "font-size": 22, "font-weight": 700, fill: "#e8f5ea" }, svg);
-  txt("урон", { x: 70, y: 398, "font-family": "JetBrains Mono, monospace", "font-size": 11, fill: "#5f7766" }, svg);
+  txt(L("урон", "damage"), { x: 70, y: 398, "font-family": "JetBrains Mono, monospace", "font-size": 11, fill: "#5f7766" }, svg);
 
   const dmg = [57, 63];
   const spots = [{ x: 220, y: 215, tint: "#5b2a2a", f: 0.78 }, { x: 410, y: 235, tint: "#4a3a22", f: 0.42 }, { x: 600, y: 210, tint: "#5b2a2a", f: 0.07 }];
@@ -118,7 +120,7 @@ function stageTimeline() {
   const L1 = el("g", { opacity: 0 }, svg);
   const brackets = [[16, 52, 16, 16, 52, 16], [784, 52, 784, 16, 748, 16], [16, 384, 16, 420, 52, 420], [784, 384, 784, 420, 748, 420]].map((p) =>
     el("polyline", { points: p.join(" "), fill: "none", stroke: COLORS.green, "stroke-width": 3, "stroke-linecap": "round" }, L1));
-  txt("захват окна", { x: 400, y: 22, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace", "font-size": 13, fill: COLORS.green }, L1);
+  txt(L("захват окна", "window capture"), { x: 400, y: 22, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace", "font-size": 13, fill: COLORS.green }, L1);
 
   // слой 2: линия сканирования и найденные полоски
   const L2 = el("g", { opacity: 0 }, svg);
@@ -140,7 +142,7 @@ function stageTimeline() {
 
   // слой 5: оверлей подсказок
   const L5 = el("g", { opacity: 0 }, svg);
-  txt("оверлей поверх игры", { x: 560, y: 426, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace", "font-size": 13, fill: COLORS.green }, L5);
+  txt(L("оверлей поверх игры", "overlay on top of the game"), { x: 560, y: 426, "text-anchor": "middle", "font-family": "JetBrains Mono, monospace", "font-size": 13, fill: COLORS.green }, L5);
 
   const tl = gsap.timeline({ paused: true });
   const num = { v: 0 };
@@ -169,7 +171,7 @@ function stageTimeline() {
 function calculator() {
   const q = (id) => document.getElementById(id);
   const num = (id) => Number(q(id).value);
-  const yes = (r) => (r.one ? "да" : r.maybe ? "только при высоком уроне" : "нет");
+  const yes = (r) => (r.one ? L("да", "yes") : r.maybe ? L("только при высоком уроне", "only with high damage") : L("нет", "no"));
   function render() {
     let [lo, hi] = [num("dmin"), num("dmax")];
     if (lo > hi) [lo, hi] = [hi, lo];
@@ -177,18 +179,18 @@ function calculator() {
     q("o-frac").textContent = Math.round(f * 100) + "%";
     const types = [{ hp: num("mhp"), armor: num("marm") }, { hp: num("rhp"), armor: num("rarm") }];
     if (!(lo > 0) || types.some((t) => !(t.hp > 0) || Number.isNaN(t.armor))) {
-      q("explain").textContent = "Укажите положительный урон и здоровье крипов.";
+      q("explain").textContent = L("Укажите положительный урон и здоровье крипов.", "Enter a positive damage and creep health.");
       return;
     }
     const v = combine(f, lo, hi, types);
     q("meter").style.width = f * 100 + "%";
     q("meter").style.background = COLORS[v.state];
-    const word = v.hi === 1 ? "удар" : v.hi >= 2 && v.hi <= 4 ? "удара" : "ударов";
+    const word = lang === "en" ? (v.hi === 1 ? "hit" : "hits") : v.hi === 1 ? "удар" : v.hi >= 2 && v.hi <= 4 ? "удара" : "ударов";
     q("verdict").textContent = v.range + " " + word;
     q("explain").textContent = {
-      green: "Один удар добьёт любого крипа: полоска станет зелёной.",
-      amber: "Добить одним ударом можно, но не гарантировано для обоих типов: полоска не зелёная.",
-      red: "Одним ударом не добить. Подсказка покажет число ударов.",
+      green: L("Один удар добьёт любого крипа: полоска станет зелёной.", "One hit finishes any creep: the bar turns green."),
+      amber: L("Добить одним ударом можно, но не гарантировано для обоих типов: полоска не зелёная.", "One hit may be enough, but it is not guaranteed for both types: the bar stays not green."),
+      red: L("Одним ударом не добить. Подсказка покажет число ударов.", "One hit is not enough. The hint will show the number of hits."),
     }[v.state];
     [["m", 0], ["r", 1]].forEach(([k, i]) => {
       q(k + "-hp").textContent = Math.round(f * types[i].hp);

@@ -4,6 +4,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { ALPHABET, makeCode, validUrl } from "./code.js";
+import { L, lang, initI18n } from "../src/i18n.js";
+initI18n();
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -11,7 +13,7 @@ const NS = "http://www.w3.org/2000/svg";
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const LIME = "#d4ff3a", PINK = "#ff9bd0", MUTED = "#c3ccff";
-const HOST = "ваш-хост";
+const HOST = L("ваш-хост", "your-host");
 
 function el(tag, attrs = {}, parent) {
   const n = document.createElementNS(NS, tag);
@@ -58,13 +60,13 @@ function stageTimeline() {
     txt(sub, { x: x + 75, y: y + 58, "text-anchor": "middle", "font-size": 12, fill: MUTED }, g);
     return g;
   };
-  node(40, 120, "Клиент", "curl, браузер");
-  node(355, 120, "Воркер", "Cloudflare Workers");
+  node(40, 120, L("Клиент", "Client"), L("curl, браузер", "curl, browser"));
+  node(355, 120, L("Воркер", "Worker"), "Cloudflare Workers");
   node(670, 120, "KV", "LINKS");
   const lines = [[190, 159, 355, 159], [505, 159, 670, 159]].map(([x1, y1, x2, y2]) => el("line", { x1, y1, x2, y2, stroke: "rgba(255,255,255,.28)", "stroke-width": 2, "stroke-dasharray": "5 6" }, svg));
 
   // подписи над линиями и над узлами
-  const labels = ["POST /api", "проверка", "makeCode()", "put", "GET /код → 302"].map((t, i) => txt(t, { x: [270, 430, 430, 590, 430][i], y: [140, 100, 100, 140, 100][i], "text-anchor": "middle", "font-size": 13, fill: LIME, opacity: 0 }, svg));
+  const labels = ["POST /api", L("проверка", "validation"), "makeCode()", "put", L("GET /код → 302", "GET /code → 302")].map((t, i) => txt(t, { x: [270, 430, 430, 590, 430][i], y: [140, 100, 100, 140, 100][i], "text-anchor": "middle", "font-size": 13, fill: LIME, opacity: 0 }, svg));
 
   // проверка ссылок, прогон настоящей validUrl
   const tests = ["https://example.com", "javascript:alert(1)", "file:///etc/passwd"];
@@ -72,7 +74,7 @@ function stageTimeline() {
     const ok = validUrl(s);
     const g = el("g", { opacity: 0 }, svg);
     txt(s, { x: 300, y: 250 + i * 30, "font-size": 14, fill: "#fff" }, g);
-    txt(ok ? "принята" : "отклонена", { x: 520, y: 250 + i * 30, "font-size": 14, "font-weight": 700, fill: ok ? LIME : PINK }, g);
+    txt(ok ? L("принята", "accepted") : L("отклонена", "rejected"), { x: 520, y: 250 + i * 30, "font-size": 14, "font-weight": 700, fill: ok ? LIME : PINK }, g);
     return g;
   });
 
@@ -83,7 +85,7 @@ function stageTimeline() {
     return txt("?", { x: 334 + i * 38, y: 280, "text-anchor": "middle", "font-size": 24, "font-weight": 700, fill: LIME, opacity: 0 }, svg);
   });
   const reelBoxes = $$("rect", svg).filter((r) => r.getAttribute("y") === "250");
-  const collide = txt("код занят: берём другой (до 5 попыток)", { x: 430, y: 330, "text-anchor": "middle", "font-size": 13, fill: PINK, opacity: 0 }, svg);
+  const collide = txt(L("код занят: берём другой (до 5 попыток)", "code taken: pick another (up to 5 attempts)"), { x: 430, y: 330, "text-anchor": "middle", "font-size": 13, fill: PINK, opacity: 0 }, svg);
 
   // запись в KV
   const kvRow = txt("", { x: 745, y: 232, "text-anchor": "middle", "font-size": 13, fill: LIME, opacity: 0 }, svg);
@@ -141,12 +143,12 @@ function demo(motion) {
   $("#form").addEventListener("submit", () => {
     const url = $("#url").value.trim();
     resp.textContent = "";
-    if (!validUrl(url)) { out.hidden = true; msg.textContent = "400: нужна ссылка http(s)"; return; }
+    if (!validUrl(url)) { out.hidden = true; msg.textContent = L("400: нужна ссылка http(s)", "400: an http(s) link is required"); return; }
     let code;
     for (let i = 0; i < 5; i++) { const c = makeCode(); if (!created.has(c)) { code = c; break; } } // как в воркере: при коллизии берём другой
     created.set(code, url);
     current = code;
-    msg.textContent = "201: ссылка создана (в этой демонстрации нигде не сохраняется)";
+    msg.textContent = L("201: ссылка создана (в этой демонстрации нигде не сохраняется)", "201: link created (not saved anywhere in this demo)");
     out.hidden = false;
     const full = `https://${HOST}/${code}`;
     if (!motion) { codeEl.textContent = full; return; }
@@ -173,7 +175,7 @@ mm.add({ motion: "(prefers-reduced-motion: no-preference)", wide: "(min-width: 9
   const mark = (p) => { const i = Math.min(4, Math.floor(p * tl.duration() * 0.999)); steps.forEach((li, k) => li.classList.toggle("on", k === i)); };
 
   $$(".nums b").forEach((b) => {
-    const to = Number(b.dataset.to), suffix = b.dataset.suffix ?? "", o = { v: 0 };
+    const to = Number(b.dataset.to), suffix = (lang === "en" ? b.dataset.suffixEn : b.dataset.suffix) ?? b.dataset.suffix ?? "", o = { v: 0 };
     if (!motion) { b.textContent = to + suffix; return; }
     gsap.to(o, { v: to, duration: 1.4, ease: "power2.out", scrollTrigger: { trigger: ".nums", start: "top 85%", once: true }, onUpdate: () => { b.textContent = Math.round(o.v) + suffix; } });
   });

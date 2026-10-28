@@ -3,6 +3,8 @@ import "./style.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { analyze, LINE } from "./analyze.js";
+import { L, initI18n } from "../src/i18n.js";
+initI18n();
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,16 +40,16 @@ function heroTerminal(motion) {
   const lines = sampleLines(34, 7);
   const result = analyze(lines, 3);
   const summary = [
-    `Запросов: ${result.total}  4xx: ${result.errors_4xx_pct}%  5xx: ${result.errors_5xx_pct}%`,
-    "Топ страниц:", ...result.top_paths.map(([p, n]) => `  ${String(n).padStart(6)}  ${p}`),
-    "Топ IP:", ...result.top_ips.map(([p, n]) => `  ${String(n).padStart(6)}  ${p}`),
+    `${L("Запросов", "Requests")}: ${result.total}  4xx: ${result.errors_4xx_pct}%  5xx: ${result.errors_5xx_pct}%`,
+    L("Топ страниц:", "Top pages:"), ...result.top_paths.map(([p, n]) => `  ${String(n).padStart(6)}  ${p}`),
+    L("Топ IP:", "Top IPs:"), ...result.top_ips.map(([p, n]) => `  ${String(n).padStart(6)}  ${p}`),
   ];
   const add = (html, cls = "") => { const d = document.createElement("div"); d.innerHTML = html; if (cls) d.className = cls; term.appendChild(d); while (term.children.length > 40) term.firstChild.remove(); };
   const cmd = "python log_analyzer.py access.log --top 3";
 
   if (!motion) {
     add(`<span class="cmd">$ ${cmd}</span>`);
-    summary.forEach((s) => add(esc(s), /^(Запросов)/.test(s) ? "ok" : ""));
+    summary.forEach((s) => add(esc(s), /^(Запросов|Requests)/.test(s) ? "ok" : ""));
     return;
   }
   const tl = gsap.timeline({ repeat: -1, repeatDelay: 2.2, delay: 0.5 });
@@ -92,7 +94,7 @@ function anatomy() {
 /* ---------- Интерактивный разбор ---------- */
 function analyzer(motion) {
   const log = $("#log");
-  log.value = [...sampleLines(18, 3), "это не строка лога"].join("\n");
+  log.value = [...sampleLines(18, 3), L("это не строка лога", "this is not a log line")].join("\n");
   const fill = (el, v) => (motion ? gsap.to(el, { width: v + "%", duration: 0.5, ease: "power3.out", overwrite: true }) : gsap.set(el, { width: v + "%" }));
   const list = (ul, rows, max) => {
     ul.innerHTML = rows.map(([k, n]) => `<li><span>${esc(k)}</span><b>${n}</b><i><u data-w="${max ? Math.round((n / max) * 100) : 0}"></u></i></li>`).join("");
@@ -110,7 +112,7 @@ function analyzer(motion) {
     list($("#t-paths"), r.top_paths, r.top_paths[0]?.[1]);
     list($("#t-ips"), r.top_ips, r.top_ips[0]?.[1]);
     const bad = lines.length - r.total;
-    $("#skip").textContent = bad ? `Не распознано и пропущено строк: ${bad}` : "";
+    $("#skip").textContent = bad ? `${L("Не распознано и пропущено строк", "Unrecognised lines skipped")}: ${bad}` : "";
   }
   $("#run").addEventListener("click", render);
   $("#top").addEventListener("change", render);

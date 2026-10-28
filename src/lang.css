@@ -1,0 +1,5 @@
+.lang { --lang-bg:rgba(255,255,255,.1); --lang-ink:inherit; --lang-on:#ff7aa8; --lang-on-ink:#1a1020; display:inline-flex; padding:3px; border-radius:999px; background:var(--lang-bg); font:500 .78rem 'JetBrains Mono',ui-monospace,Consolas,monospace; backdrop-filter:blur(8px); }
+.lang button { all:unset; cursor:pointer; padding:5px 11px; border-radius:999px; color:var(--lang-ink); line-height:1.2; }
+.lang button[aria-pressed="true"] { background:var(--lang-on); color:var(--lang-on-ink); }
+.lang button:focus-visible { outline:2px solid currentColor; outline-offset:2px; }
+.lang-fixed { position:fixed; top:18px; right:clamp(16px,3vw,40px); z-index:50; }

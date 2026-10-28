@@ -3,6 +3,8 @@ import "./style.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
+import { L, initI18n } from "../src/i18n.js";
+initI18n();
 
 gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
@@ -19,6 +21,8 @@ if (RELEASE) {
   d.hidden = false;
   $("#repo").className = "btn ghost";
 }
+
+const ordinal = (n) => (n % 100 >= 11 && n % 100 <= 13 ? "th" : { 1: "st", 2: "nd", 3: "rd" }[n % 10] ?? "th");
 
 /* ---------- Графики из условных значений ---------- */
 function curve(values, w, h, pad = 14) {
@@ -69,16 +73,16 @@ function buildPanes() {
   const panes = $("#panes");
   const row = (name, pct) => `<div class="row"><span>${name}</span><i><u data-w="${pct}"></u></i><em>${pct}%</em></div>`;
   panes.innerHTML = `
-    <div class="pane"><div class="profile"><span class="av"></span><div><b>Игрок</b><span class="pill">ранг: пример</span></div></div>
-      <h4>Герои по винрейту</h4>${row("Герой А", 64)}${row("Герой Б", 57)}${row("Герой В", 52)}${row("Герой Г", 46)}</div>
+    <div class="pane"><div class="profile"><span class="av"></span><div><b>${L("Игрок", "Player")}</b><span class="pill">${L("ранг: пример", "rank: sample")}</span></div></div>
+      <h4>${L("Герои по винрейту", "Heroes by win rate")}</h4>${row(L("Герой А", "Hero A"), 64)}${row(L("Герой Б", "Hero B"), 57)}${row(L("Герой В", "Hero C"), 52)}${row(L("Герой Г", "Hero D"), 46)}</div>
     <div class="pane"><div class="chips"><span>10</span><span>20</span><span>50</span><span>100</span></div><svg id="pane-chart"></svg></div>
-    <div class="pane"><h4>Темп добивания против эталонов</h4>
-      ${["5-я минута", "10-я минута", "15-я минута"].map((t, i) => `<div class="perc"><div class="t"><span>${t}</span><span data-p="${[62, 48, 71][i]}">0</span></div><div class="rail"><i class="mk"></i></div></div>`).join("")}</div>
-    <div class="pane"><h4>Вражеские герои</h4><div class="enemies">${"12345".split("").map((n) => `<span>${n}</span>`).join("")}</div>
-      <div class="sug"><div><b>Герой А</b><span>хорош против большинства выбранных врагов</span></div><div><b>Герой Б</b><span>подходит вашему рангу</span></div><div class="bad"><b>Не брать: В</b><span>слаб против двух из пяти</span></div></div></div>
-    <div class="pane"><h4>Настройки</h4>
-      <div class="field"><small>API-ключ OpenDota (необязательно)</small><div class="in" id="key"></div></div>
-      <div class="btns"><span class="p">Сохранить</span><span>Очистить кэш</span><span>Запустить помощник добивания</span></div></div>`;
+    <div class="pane"><h4>${L("Темп добивания против эталонов", "Last-hit pace against benchmarks")}</h4>
+      ${[L("5-я минута", "Minute 5"), L("10-я минута", "Minute 10"), L("15-я минута", "Minute 15")].map((t, i) => `<div class="perc"><div class="t"><span>${t}</span><span data-p="${[62, 48, 71][i]}">0</span></div><div class="rail"><i class="mk"></i></div></div>`).join("")}</div>
+    <div class="pane"><h4>${L("Вражеские герои", "Enemy heroes")}</h4><div class="enemies">${"12345".split("").map((n) => `<span>${n}</span>`).join("")}</div>
+      <div class="sug"><div><b>${L("Герой А", "Hero A")}</b><span>${L("хорош против большинства выбранных врагов", "good against most of the chosen enemies")}</span></div><div><b>${L("Герой Б", "Hero B")}</b><span>${L("подходит вашему рангу", "fits your rank")}</span></div><div class="bad"><b>${L("Не брать: В", "Avoid: C")}</b><span>${L("слаб против двух из пяти", "weak against two of five")}</span></div></div></div>
+    <div class="pane"><h4>${L("Настройки", "Settings")}</h4>
+      <div class="field"><small>${L("API-ключ OpenDota (необязательно)", "OpenDota API key (optional)")}</small><div class="in" id="key"></div></div>
+      <div class="btns"><span class="p">${L("Сохранить", "Save")}</span><span>${L("Очистить кэш", "Clear cache")}</span><span>${L("Запустить помощник добивания", "Start the last-hit helper")}</span></div></div>`;
   return $$(".pane", panes);
 }
 
@@ -95,7 +99,7 @@ function tabsTimeline() {
   T((t) => $$(".perc", panes[2]).forEach((p, i) => {
     const to = Number($("[data-p]", p).dataset.p), o = { v: 0 };
     t.to($(".mk", p), { left: to + "%", duration: 0.6, ease: "power3.out" }, i * 0.12)
-      .to(o, { v: to, duration: 0.6, onUpdate: () => { $("[data-p]", p).textContent = Math.round(o.v) + "-й процентиль"; } }, i * 0.12);
+      .to(o, { v: to, duration: 0.6, onUpdate: () => { $("[data-p]", p).textContent = L(Math.round(o.v) + "-й процентиль", Math.round(o.v) + ordinal(Math.round(o.v)) + " percentile"); } }, i * 0.12);
   }));
   T((t) => t.from($$(".enemies span", panes[3]), { scale: 0, stagger: 0.07, duration: 0.25, ease: "back.out(2)" }, 0)
     .from($$(".sug div", panes[3]), { autoAlpha: 0, x: 24, stagger: 0.12, duration: 0.3 }, 0.35));

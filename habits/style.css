@@ -83,3 +83,4 @@ h3 { font:500 .95rem var(--mono); color:var(--tomato); margin-bottom:10px; }
   #steps li { opacity:1; }
 }
 @media (max-width:520px) { .days, .row14 { gap:4px; } .days button { border-radius:6px; } }
+.lang { --lang-bg:rgba(0,0,0,.06); --lang-on:#17141c; --lang-on-ink:#fff; }

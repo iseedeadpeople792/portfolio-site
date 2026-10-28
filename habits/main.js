@@ -3,6 +3,8 @@ import "./style.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { bestStreak, currentStreak } from "./streak.js";
+import { L, initI18n } from "../src/i18n.js";
+initI18n();
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -110,7 +112,7 @@ function tracker(motion) {
   const KEY = "habits-demo-v1";
   let habits;
   try { habits = JSON.parse(localStorage.getItem(KEY) || "null"); } catch { habits = null; }
-  if (!Array.isArray(habits)) habits = [{ name: "Зарядка", dates: [dayAt(-2), dayAt(-1)] }];
+  if (!Array.isArray(habits)) habits = [{ name: L("Зарядка", "Workout"), dates: [dayAt(-2), dayAt(-1)] }];
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(habits)); } catch { /* хранилище недоступно: работаем без сохранения */ } };
 
   function render() {
@@ -119,7 +121,7 @@ function tracker(motion) {
       const box = document.createElement("div");
       box.className = "habit";
       const cur = currentStreak(h.dates, TODAY), best = bestStreak(h.dates);
-      box.innerHTML = `<div class="habit-top"><b></b><span class="st">серия <em class="c">${cur}</em> · рекорд <em class="b">${best}</em></span><button type="button" aria-label="Удалить привычку" title="Удалить">✕</button></div><div class="days"></div>`;
+      box.innerHTML = `<div class="habit-top"><b></b><span class="st">${L("серия", "streak")} <em class="c">${cur}</em> · ${L("рекорд", "record")} <em class="b">${best}</em></span><button type="button" aria-label="${L("Удалить привычку", "Delete habit")}" title="${L("Удалить", "Delete")}">✕</button></div><div class="days"></div>`;
       $("b", box).textContent = h.name;
       $("button", box).onclick = () => { habits.splice(hi, 1); save(); render(); };
       const days = $(".days", box);
@@ -131,7 +133,7 @@ function tracker(motion) {
         b.className = (on ? "on " : "") + (i === 0 ? "today" : "");
         b.title = d;
         b.setAttribute("aria-pressed", on);
-        b.setAttribute("aria-label", d + (on ? ", отмечено" : ", не отмечено"));
+        b.setAttribute("aria-label", d + (on ? L(", отмечено", ", done") : L(", не отмечено", ", not done")));
         b.onclick = () => { h.dates = on ? h.dates.filter((x) => x !== d) : [...h.dates, d]; save(); render(); bump(hi); };
         days.appendChild(b);
       }
