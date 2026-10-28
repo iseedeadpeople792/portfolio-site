@@ -50,7 +50,52 @@ mm.add({ motion: "(prefers-reduced-motion: no-preference)", wide: "(min-width: 9
     .from(lines.flatMap((s) => s.chars), { yPercent: 115, rotate: 6, duration: 1.1, stagger: 0.035 }, "<0.1")
     .from(".role", { autoAlpha: 0, y: 24, duration: 0.8 }, "-=0.5")
     .from(".nav", { autoAlpha: 0, y: -20, duration: 0.7 }, "<")
-    .from(".scroll-hint, .marquee", { autoAlpha: 0, duration: 0.8 }, "-=0.4");
+    .from(".scroll-hint", { autoAlpha: 0, duration: 0.8 }, "-=0.4");
+
+
+  // Графика героя: орбиты вращаются, стикеры вылетают, покачиваются и тянутся за курсором.
+  gsap.to(".hero-art .o1", { rotation: 360, svgOrigin: "300 300", duration: 90, repeat: -1, ease: "none" });
+  gsap.to(".hero-art .o2", { rotation: -360, svgOrigin: "300 300", duration: 120, repeat: -1, ease: "none" });
+  gsap.to(".hero-art .o3", { rotation: 360, svgOrigin: "300 300", duration: 70, repeat: -1, ease: "none" });
+  const fico = $$(".fico");
+  fico.forEach((el, i) => {
+    gsap.from(el, { scale: 0, rotate: i % 2 ? 40 : -40, duration: 0.9, delay: 1.5 + i * 0.18, ease: "back.out(2.2)" });
+    gsap.to(el, { y: i % 2 ? 16 : -16, rotate: i % 2 ? 5 : -5, duration: 2.8 + i * 0.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.2 + i * 0.2 });
+  });
+  if (matchMedia("(pointer: fine)").matches) {
+    const qx = fico.map((el) => gsap.quickTo(el, "x", { duration: 0.9, ease: "power3" }));
+    const move2 = (e) => { const nx = e.clientX / innerWidth - 0.5; fico.forEach((_, i) => qx[i](nx * (i % 2 ? -34 : 34) * (1 + i * 0.3))); };
+    addEventListener("pointermove", move2);
+    ctx.add(() => removeEventListener("pointermove", move2));
+  }
+
+  // Иконки услуг оживают при появлении и дальше играют по кругу.
+  const svcIn = (art) => ({ trigger: art, start: "top 85%" });
+  $$(".svc-grid article").forEach((art, i) => {
+    const st = { scrollTrigger: svcIn(art) };
+    if (i === 0) {
+      gsap.to($(".ant", art), { scale: 1.8, transformOrigin: "50% 50%", duration: 0.5, yoyo: true, repeat: -1, repeatDelay: 0.8, ease: "sine.inOut", ...st });
+      gsap.to($$(".eye", art), { scaleY: 0.1, transformOrigin: "50% 50%", duration: 0.12, yoyo: true, repeat: -1, repeatDelay: 2.2, ...st });
+    } else if (i === 1) {
+      gsap.to($(".cur", art), { opacity: 0, duration: 0.01, repeat: -1, repeatDelay: 0.5, yoyo: true, ease: "none", ...st });
+      gsap.fromTo($(".pr", art), { x: -4 }, { x: 0, duration: 0.7, repeat: -1, repeatDelay: 1, ease: "back.out(3)", ...st });
+    } else if (i === 2) {
+      gsap.fromTo($$(".lay", art), { opacity: 0.2 }, { opacity: 1, duration: 0.5, stagger: 0.25, repeat: -1, yoyo: true, repeatDelay: 0.6, ease: "sine.inOut", ...st });
+    } else {
+      gsap.fromTo($$(".wl", art), { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.7, stagger: 0.18, repeat: -1, repeatDelay: 1.4, ease: "power3.out", ...st });
+    }
+  });
+
+  // Финал: самолётик пролетает по пунктиру.
+  if (wide) {
+    const trail = $("#ctrail"), pl = $("#cpl"), len = trail.getTotalLength(), fly = { u: 0 };
+    const place = () => { const a = trail.getPointAtLength(fly.u * len), b = trail.getPointAtLength(Math.min(len, fly.u * len + 2)); gsap.set(pl, { x: a.x, y: a.y, rotation: Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI }); };
+    gsap.set(pl, { opacity: 0 });
+    gsap.timeline({ scrollTrigger: { trigger: ".contact", start: "top 65%", once: true } })
+      .to(pl, { opacity: 1, duration: 0.2 })
+      .to(fly, { u: 1, duration: 2.8, ease: "power2.inOut", onUpdate: place }, 0)
+      .from(".c-plane .trail", { opacity: 0, duration: 1 }, 0);
+  }
 
   // Светящееся пятно догоняет курсор.
   if (matchMedia("(pointer: fine)").matches) {
