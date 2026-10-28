@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Анализатор access-логов на Python</title>
+<meta name="description" content="Консольный анализатор access-логов (combined, nginx и Apache): число запросов, доля ошибок 4xx и 5xx, популярные страницы и самые активные IP. Python без внешних зависимостей.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0a07'/%3E%3Cpath d='M7 11l6 5-6 5M16 22h9' stroke='%23ffb000' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<script type="module" src="./main.js"></script>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<a class="back" href="../">← Портфолио</a>
+
+<header class="hero">
+  <div class="hero-text">
+    <p class="tag">Python · без зависимостей</p>
+    <h1>Читает access-логи и показывает главное</h1>
+    <p class="lead">Сколько было запросов, какая доля ошибок 4xx и 5xx, какие страницы и какие IP самые частые. Файл читается построчно, поэтому большие логи не забивают память.</p>
+    <div class="actions">
+      <a class="btn main" href="#try">Разобрать свой лог</a>
+      <a class="btn ghost" href="https://github.com/iseedeadpeople792/log-analyzer">Код на GitHub</a>
+    </div>
+  </div>
+  <div class="term" aria-label="Терминал: команда и поток строк лога, затем итог разбора" role="img">
+    <div class="term-top"><span></span><span></span><span></span><em>bash</em></div>
+    <pre id="term"></pre>
+  </div>
+</header>
+
+<section class="anat" id="anat">
+  <div class="anat-pin">
+    <div class="anat-list">
+      <h2>Что берётся из строки</h2>
+      <ol id="steps">
+        <li><b>Формат combined</b><span>Так пишут логи nginx и Apache: каждая строка это один запрос.</span></li>
+        <li><b>IP клиента</b><span>Первое поле строки. По нему считается топ активных адресов.</span></li>
+        <li><b>Путь без query</b><span>Из запроса берётся адрес страницы, а всё после знака «?» отбрасывается.</span></li>
+        <li><b>Код ответа</b><span>Три цифры. По первой определяется класс: 4xx это ошибка клиента, 5xx ошибка сервера.</span></li>
+        <li><b>Остальное не нужно</b><span>Время, размер, реферер и User-Agent разбор не читает. Строки, не подходящие под формат, пропускаются.</span></li>
+      </ol>
+    </div>
+    <div class="anat-stage">
+      <pre id="logline"><span class="f ip">203.0.113.7</span> <span class="f dim">- -</span> <span class="f dim">[28/Oct/2026:10:00:02 +0300]</span> <span class="f dim">"GET</span> <span class="f path">/pricing</span><span class="f query">?utm=mail</span> <span class="f dim">HTTP/1.1"</span> <span class="f status">404</span> <span class="f dim">512 "-" "curl/8.4"</span></pre>
+      <div class="chips" id="chips">
+        <span id="c-ip">ip: 203.0.113.7</span><span id="c-path">путь: /pricing</span><span id="c-class">класс: 4xx</span>
+      </div>
+      <p class="rx-label">Регулярное выражение разбора:</p>
+      <pre id="rx"><span class="g1">^(\S+)</span> \S+ \S+ \[[^\]]+\] "(?:\S+) <span class="g2">(\S+)</span>[^"]*" <span class="g3">(\d{3})</span> </pre>
+    </div>
+  </div>
+</section>
+
+<section class="try" id="try">
+  <div class="try-head">
+    <h2>Разберите свой лог</h2>
+    <p>Страница использует тот же разбор, что программа на Python (проверено теми же тестовыми строками). Текст никуда не отправляется, он обрабатывается прямо в браузере.</p>
+  </div>
+  <div class="grid">
+    <div class="panel">
+      <label for="log">Строки access-лога (combined)</label>
+      <textarea id="log" rows="12" spellcheck="false"></textarea>
+      <div class="ctrl">
+        <label for="top">Топ:
+          <select id="top"><option>3</option><option selected>5</option><option>10</option></select>
+        </label>
+        <button class="btn main" id="run" type="button">Анализировать</button>
+      </div>
+    </div>
+    <div class="panel res" aria-live="polite">
+      <div class="sum">
+        <div><small>Запросов</small><b id="r-total">0</b></div>
+        <div><small>4xx</small><b id="r-4">0%</b><i><u id="b-4"></u></i></div>
+        <div><small>5xx</small><b id="r-5">0%</b><i><u id="b-5"></u></i></div>
+      </div>
+      <h3>Топ страниц</h3>
+      <ul class="top" id="t-paths"></ul>
+      <h3>Топ IP</h3>
+      <ul class="top" id="t-ips"></ul>
+      <p class="skip" id="skip"></p>
+    </div>
+  </div>
+</section>
+
+<section class="facts">
+  <h2>Что стоит знать</h2>
+  <div class="cols">
+    <div><h3>Запуск</h3><p>python log_analyzer.py access.log --top 10. Нужен Python 3.9 или новее, внешние библиотеки не требуются.</p></div>
+    <div><h3>Устойчивость</h3><p>Битые строки пропускаются, файл читается построчно и с заменой нечитаемых символов, поэтому большой или грязный лог не роняет программу.</p></div>
+    <div><h3>Проверка</h3><p>Тесты на unittest проверяют подсчёт, проценты, отбрасывание query-строки и пустой ввод.</p></div>
+  </div>
+</section>
+
+<footer class="end">
+  <p>Python 3.9+, unittest.</p>
+  <p><a href="https://github.com/iseedeadpeople792/log-analyzer">Исходники</a><a href="../">Другие проекты</a></p>
+</footer>
+</body>
+</html>

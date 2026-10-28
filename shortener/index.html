@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сокращатель ссылок на Cloudflare Workers</title>
+<meta name="description" content="Короткие ссылки на Cloudflare Workers и KV. Бесплатный тариф, без сервера и базы данных. Принимает только http и https.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231432ff'/%3E%3Cpath d='M8 16h16M18 10l6 6-6 6' stroke='%23d4ff3a' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<script type="module" src="./main.js"></script>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<a class="back" href="../">← Портфолио</a>
+
+<header class="hero">
+  <p class="tag">Cloudflare Workers · KV · JavaScript</p>
+  <h1>Длинная ссылка внутри, короткая снаружи</h1>
+  <div class="morph" aria-hidden="true"><span id="long"></span><span id="short"></span></div>
+  <p class="lead">Сокращатель без сервера и базы данных: одна функция на Cloudflare Workers и хранилище KV. Бесплатный тариф.</p>
+  <div class="actions">
+    <a class="btn main" href="#try">Попробовать</a>
+    <a class="btn ghost" href="https://github.com/iseedeadpeople792/url-shortener-worker">Код на GitHub</a>
+  </div>
+</header>
+
+<section class="flow" id="flow">
+  <div class="flow-pin">
+    <div class="flow-list">
+      <h2>Что происходит с запросом</h2>
+      <ol id="steps">
+        <li><b>POST /api</b><span>Клиент отправляет ссылку в JSON.</span></li>
+        <li><b>Проверка</b><span>Пропускаются только http и https: ссылки javascript: и file: отклоняются.</span></li>
+        <li><b>Код из шести знаков</b><span>Алфавит без похожих символов. При совпадении берётся другой код, до пяти попыток.</span></li>
+        <li><b>Запись в KV</b><span>Пара «код → ссылка» сохраняется в хранилище Cloudflare.</span></li>
+        <li><b>GET /код</b><span>Воркер находит ссылку и отвечает 302. Неизвестный код получает 404.</span></li>
+      </ol>
+    </div>
+    <svg id="stage" viewBox="0 0 860 460" role="img" aria-label="Схема: клиент, воркер и хранилище KV, между ними движется запрос"></svg>
+  </div>
+</section>
+
+<section class="try" id="try">
+  <div class="try-head">
+    <h2>Попробуйте проверку и генерацию</h2>
+    <p>Страница выполняет ту же проверку и тот же генератор кодов, что воркер. Ссылки здесь никуда не сохраняются: это демонстрация в браузере.</p>
+  </div>
+  <form class="box" id="form" onsubmit="return false">
+    <label for="url">Длинная ссылка</label>
+    <div class="line">
+      <input id="url" type="text" value="https://example.com/blog/kak-rabotaet-edge-hosting?utm_source=newsletter" spellcheck="false" autocomplete="off">
+      <button id="go" type="submit" class="btn main">Сократить</button>
+    </div>
+    <p id="msg" role="status" aria-live="polite"></p>
+    <div class="out" id="out" hidden>
+      <small>Короткая ссылка</small>
+      <b id="code"></b>
+      <div class="code302"><button type="button" id="open" class="btn ghost">Перейти по короткой</button><pre id="resp"></pre></div>
+    </div>
+  </form>
+</section>
+
+<section class="facts">
+  <h2>В цифрах и честно</h2>
+  <ul class="nums">
+    <li><b data-to="56">0</b><span>символов в алфавите</span></li>
+    <li><b data-to="6">0</b><span>знаков в коде</span></li>
+    <li><b data-to="31" data-suffix=" млрд">0</b><span>возможных кодов</span></li>
+    <li><b data-to="5">0</b><span>попыток при совпадении</span></li>
+  </ul>
+  <div class="cols">
+    <div><h3>Что учтено</h3><p>Только http и https, код без 0/O и 1/l/I, понятная ошибка 400 на неверный JSON и на непрошедшую проверку ссылку.</p></div>
+    <div><h3>Ограничения</h3><p>Нет авторизации и лимитов на создание ссылок, поэтому для публичного использования нужно добавить ограничение запросов.</p></div>
+    <div><h3>Проверка</h3><p>Тест прогоняет создание, переход 302, ответ 404 и две ошибки 400 на поддельном хранилище.</p></div>
+  </div>
+</section>
+
+<footer class="end">
+  <p>Cloudflare Workers, KV, JavaScript.</p>
+  <p><a href="https://github.com/iseedeadpeople792/url-shortener-worker">Исходники</a><a href="../">Другие проекты</a></p>
+</footer>
+</body>
+</html>

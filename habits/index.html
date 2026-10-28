@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Трекер привычек с сериями</title>
+<meta name="description" content="Трекер привычек в браузере: отмечайте выполненные дни и смотрите текущую и рекордную серии. Без регистрации, данные хранятся у вас.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232fd18b'/%3E%3Cpath d='M8 16.5l5 4.5 11-11' stroke='%23fff' stroke-width='3.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<script type="module" src="./main.js"></script>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<a class="back" href="../">← Портфолио</a>
+
+<header class="hero">
+  <div class="hero-text">
+    <p class="tag">JavaScript · localStorage · без сборки</p>
+    <h1>Привычки держатся на сериях</h1>
+    <p class="lead">Отмечайте выполненные дни и смотрите текущую и рекордную серии. Регистрации нет, данные лежат в вашем браузере.</p>
+    <div class="actions">
+      <a class="btn main" href="#try">Попробовать</a>
+      <a class="btn ghost" href="https://github.com/iseedeadpeople792/habit-tracker">Код на GitHub</a>
+    </div>
+  </div>
+  <div class="board" aria-label="Календарь отметок за 16 недель с текущей и рекордной серией" role="img">
+    <div class="counts"><div><small>серия</small><b id="h-cur">0</b></div><div><small>рекорд</small><b id="h-best">0</b></div></div>
+    <div class="heat" id="heat"></div>
+    <p class="cap">Пример: сегодня ещё не отмечено, а серия не оборвалась</p>
+  </div>
+</header>
+
+<section class="rules" id="rules">
+  <div class="rules-pin">
+    <div class="rules-list">
+      <h2>Как считается серия</h2>
+      <ol id="steps">
+        <li><b>Подряд идущие дни</b><span>Серия это дни без пропусков, ведущие к сегодняшнему.</span></li>
+        <li><b>Сегодня можно отметить позже</b><span>Если сегодня ещё не отмечено, серия не обрывается: считается до вчера.</span></li>
+        <li><b>Пропуск обрывает серию</b><span>Один пропущенный день, и счёт начинается заново.</span></li>
+        <li><b>Рекорд запоминает лучшее</b><span>Самая длинная серия за всё время остаётся, даже если текущая короче.</span></li>
+        <li><b>Дубли не считаются</b><span>Две отметки за один день это одна отметка.</span></li>
+      </ol>
+    </div>
+    <div class="stage">
+      <div class="counts small"><div><small>серия</small><b id="s-cur">0</b></div><div><small>рекорд</small><b id="s-best">0</b></div></div>
+      <div class="row14" id="row14"></div>
+      <p class="legend"><i class="k-cur"></i> текущая серия <i class="k-best"></i> рекорд <span id="dup" class="dup">дубль учтён один раз</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="try" id="try">
+  <div class="try-head">
+    <h2>Попробуйте сами</h2>
+    <p>Нажимайте на клетки: можно отметить и прошлые дни, серии пересчитаются. Данные хранятся только в этом браузере.</p>
+  </div>
+  <form class="add" id="form" onsubmit="return false">
+    <input id="name" placeholder="Новая привычка" maxlength="40" required autocomplete="off">
+    <button class="btn main" type="submit">Добавить</button>
+  </form>
+  <div id="list"></div>
+</section>
+
+<section class="facts">
+  <h2>Что стоит знать</h2>
+  <div class="cols">
+    <div><h3>Хранение</h3><p>Привычки сохраняются в localStorage браузера. Сервера нет, поэтому данные не уходят с вашего устройства.</p></div>
+    <div><h3>Логика отдельно</h3><p>Подсчёт серий вынесен в отдельный модуль без зависимости от страницы, поэтому проверяется простым тестом на Node.</p></div>
+    <div><h3>Запуск</h3><p>Из-за ES-модулей страницу нужно открывать через локальный сервер: python -m http.server 8000.</p></div>
+  </div>
+</section>
+
+<footer class="end">
+  <p>JavaScript, ES-модули, localStorage.</p>
+  <p><a href="https://github.com/iseedeadpeople792/habit-tracker">Исходники</a><a href="../">Другие проекты</a></p>
+</footer>
+</body>
+</html>
