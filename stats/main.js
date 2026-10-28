@@ -7,7 +7,7 @@ import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
 // Ссылка на готовый .exe в «Релизах» GitHub. Пока релиза нет, кнопка скачивания скрыта.
-const RELEASE = null;
+const RELEASE = "https://github.com/iseedeadpeople792/dota2-stats/releases/latest/download/Dota2Stats.exe";
 
 const NS = "http://www.w3.org/2000/svg";
 const $ = (s, r = document) => r.querySelector(s);
