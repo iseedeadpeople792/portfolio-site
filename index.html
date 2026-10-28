@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Даниил Плотников — разработчик</title>
+<meta name="description" content="Портфолио Даниила Плотникова: приложения для Dota 2 с компьютерным зрением, Telegram-боты, утилиты на Python и JavaScript.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231a1020'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ff7aa8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<script type="module" src="/src/main.js"></script>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<div class="orb" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="logo" href="#top" aria-label="В начало">ДП</a>
+  <nav aria-label="Разделы">
+    <a href="#work">Проекты</a>
+    <a href="#process">Как я работаю</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="top">
+    <p class="hello">Привет, меня зовут</p>
+    <h1 class="name" aria-label="Даниил Плотников">
+      <span class="line">Даниил</span>
+      <span class="line">Плотников</span>
+    </h1>
+    <p class="role">Разработчик. Делаю инструменты, которые берут на себя скучную часть работы: от компьютерного зрения для игры до Telegram-ботов.</p>
+    <p class="scroll-hint">Листайте вниз</p>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>JavaScript</span><span>Python</span><span>C#</span><span>SQL</span><span>Cloudflare Workers</span><span>Telegram Bot API</span><span>GSAP</span><span>Node.js</span>
+        <span>JavaScript</span><span>Python</span><span>C#</span><span>SQL</span><span>Cloudflare Workers</span><span>Telegram Bot API</span><span>GSAP</span><span>Node.js</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement">
+    <p class="big" id="statement">Мне нравится, когда программа делает то, на что у человека не хватает рук или времени: распознаёт картинку в игре, считает статистику матчей, записывает клиента, пока мастер занят своим делом.</p>
+  </section>
+
+  <section class="work" id="work" aria-label="Проекты">
+    <div class="h-panel">
+      <div class="h-head">
+        <h2>Проекты</h2>
+        <span class="counter" aria-hidden="true"><b id="cur">01</b> / <span id="tot">06</span></span>
+      </div>
+      <div class="h-track" id="track"></div>
+    </div>
+  </section>
+
+  <section class="process" id="process">
+    <div class="p-panel">
+      <h2>Как я работаю</h2>
+      <div class="p-body">
+        <div class="p-line" aria-hidden="true"><i></i></div>
+        <ol class="p-steps">
+          <li><h3>Понять задачу</h3><p>Выясняю, что именно должно стать проще и для кого. Лишнего не добавляю.</p></li>
+          <li><h3>Собрать рабочий минимум</h3><p>Сначала версия, которая решает главное. Её можно потрогать и поправить.</p></li>
+          <li><h3>Проверить и назвать ограничения</h3><p>Пишу тесты и честно записываю, чего программа не умеет. Так проект не обманывает ожиданий.</p></li>
+          <li><h3>Передать так, чтобы разобрались</h3><p>Инструкция, README, запуск одной командой. Чужой человек должен суметь поменять тексты сам.</p></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="stack" aria-label="Технологии">
+    <h2>С чем работаю</h2>
+    <div class="stack-grid">
+      <div><h3>Языки</h3><p>JavaScript, Python, C#, SQL</p></div>
+      <div><h3>Платформы</h3><p>Cloudflare Workers и KV, Telegram Bot API, Node.js</p></div>
+      <div><h3>Данные и зрение</h3><p>SQLite, OpenDota API, распознавание изображений, OCR</p></div>
+      <div><h3>Проверка</h3><p>pytest, node:test, GitHub Actions</p></div>
+      <div><h3>Интерфейс</h3><p>HTML, CSS, GSAP, окна приложений на Windows</p></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="c-lead">Есть задача, которую хочется автоматизировать?</p>
+    <a class="magnet" href="https://t.me/iseedeadpeople792"><span>Написать в Telegram</span></a>
+    <p class="c-links"><a href="https://github.com/iseedeadpeople792">GitHub</a><a href="https://iseedeadpeople792.github.io/bots-portfolio/">Telegram-боты для бизнеса</a></p>
+  </section>
+</main>
+<footer class="foot">© 2026 Даниил Плотников</footer>
+</body>
+</html>
