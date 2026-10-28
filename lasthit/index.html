@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Помощник добивания для Dota 2</title>
+<meta name="description" content="Программа смотрит на картинку Dota 2 и показывает над полоской здоровья крипа, сколько ударов осталось до добивания. Не читает память игры и ничего не нажимает за игрока.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2308110c'/%3E%3Crect x='6' y='13' width='20' height='6' rx='2' fill='%237df08a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<script type="module" src="./main.js"></script>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<a class="back" href="../">← Портфолио</a>
+
+<header class="hero">
+  <div class="hero-text">
+    <p class="tag">Dota 2 · Python · компьютерное зрение</p>
+    <h1>Сколько ударов до добивания, прямо над полоской</h1>
+    <p class="lead">Программа смотрит на картинку игры, находит полоски здоровья крипов и показывает число ударов. Когда добить можно одним ударом, полоска подсвечивается зелёным.</p>
+    <div class="actions">
+      <a class="btn main" href="#calc">Проверить расчёт</a>
+      <a class="btn ghost" href="https://github.com/iseedeadpeople792/dota-lasthit">Код на GitHub</a>
+    </div>
+    <p class="promise">Только смотрит на картинку: не читает память игры, не внедряется в процесс, ничего не нажимает за игрока.</p>
+  </div>
+  <svg id="hero-scene" viewBox="0 0 720 420" role="img" aria-label="Три крипа с полосками здоровья, над которыми меняется число ударов до добивания"></svg>
+</header>
+
+<section class="how" id="how">
+  <div class="how-pin">
+    <div class="how-list">
+      <h2>Как это работает</h2>
+      <ol id="steps">
+        <li><b>Захват окна</b><span>Кадры берутся из окна игры через Windows Graphics Capture.</span></li>
+        <li><b>Поиск полосок</b><span>Полоски находятся по форме: рамка и ровная заливка.</span></li>
+        <li><b>Чтение урона</b><span>Урон героя читается с панели встроенным OCR Windows, разброс берётся из базы героев.</span></li>
+        <li><b>Отслеживание</b><span>Полоски сопровождаются между кадрами, поэтому подсказки не дёргаются.</span></li>
+        <li><b>Оверлей</b><span>Прозрачное окно поверх игры рисует число ударов над каждой полоской.</span></li>
+      </ol>
+    </div>
+    <svg id="stage" viewBox="0 0 800 450" role="img" aria-label="Схема: кадр игры, поиск полосок, чтение урона, отслеживание и подсказки"></svg>
+  </div>
+</section>
+
+<section class="calc" id="calc">
+  <div class="calc-head">
+    <h2>Проверьте расчёт сами</h2>
+    <p>Та же математика, что в программе: урон снижается бронёй по формуле Dota 2, а зелёным полоска становится только когда добивание гарантировано.</p>
+  </div>
+  <div class="calc-grid">
+    <form class="panel" id="form" onsubmit="return false">
+      <label>Здоровье на полоске <output id="o-frac">35%</output>
+        <input id="frac" type="range" min="1" max="100" value="35">
+      </label>
+      <div class="two">
+        <label>Урон героя, от <input id="dmin" type="number" min="1" max="999" value="54"></label>
+        <label>до <input id="dmax" type="number" min="1" max="999" value="60"></label>
+      </div>
+      <fieldset>
+        <legend>Допущения про крипов (можно менять в программе)</legend>
+        <div class="two">
+          <label>Ближний: здоровье <input id="mhp" type="number" min="100" max="3000" value="550"></label>
+          <label>броня <input id="marm" type="number" min="-5" max="20" step="0.5" value="2"></label>
+        </div>
+        <div class="two">
+          <label>Дальний: здоровье <input id="rhp" type="number" min="100" max="3000" value="300"></label>
+          <label>броня <input id="rarm" type="number" min="-5" max="20" step="0.5" value="0"></label>
+        </div>
+      </fieldset>
+    </form>
+    <div class="panel result">
+      <div class="meter"><i id="meter"></i><b id="verdict">?</b></div>
+      <p id="explain" aria-live="polite"></p>
+      <table>
+        <thead><tr><th></th><th>Здоровье</th><th>Ударов</th><th>Добьёте за 1 удар</th></tr></thead>
+        <tbody>
+          <tr><td>Ближний крип</td><td id="m-hp"></td><td id="m-hits"></td><td id="m-one"></td></tr>
+          <tr><td>Дальний крип</td><td id="r-hp"></td><td id="r-hits"></td><td id="r-one"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="facts">
+  <h2>Что стоит знать</h2>
+  <div class="cols">
+    <div><h3>Допущения</h3><p>Полоска показывает только долю здоровья, а ближний и дальний крип выглядят одинаково. Поэтому число ударов считается для обоих типов и показывается диапазоном. Зелёным полоска становится, только если добивание гарантировано для обоих.</p></div>
+    <div><h3>Ограничения</h3><p>Игра должна быть в оконном режиме или «окно без рамки» и быть активным окном. В эксклюзивном полноэкранном режиме оверлей показать нельзя.</p></div>
+    <div><h3>Проверки</h3><p>29 автотестов на pytest: расчёт ударов, поиск полосок на кадрах, отслеживание, настройки и командная строка.</p></div>
+  </div>
+</section>
+
+<footer class="end">
+  <p>Python, OpenCV, OCR Windows, pytest.</p>
+  <p><a href="https://github.com/iseedeadpeople792/dota-lasthit">Исходники</a><a href="../">Другие проекты</a></p>
+</footer>
+</body>
+</html>

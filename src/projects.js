@@ -4,14 +4,16 @@ export const projects = [
     title: "Помощник добивания в Dota 2",
     text: "Смотрит на картинку игры и показывает над полоской здоровья крипа, сколько ударов осталось до добивания. Ничего не читает из памяти игры и не нажимает за игрока. Полоски находит по форме, урон героя читает встроенным OCR Windows.",
     tags: ["Python", "компьютерное зрение", "OCR", "pytest"],
-    link: { href: "https://github.com/iseedeadpeople792/dota-lasthit", label: "Смотреть код" },
+    link: { href: "./lasthit/", label: "Открыть сайт проекта" },
+    repo: "https://github.com/iseedeadpeople792/dota-lasthit",
     colors: ["#ff7aa8", "#ffb199"],
   },
   {
     title: "Dota 2 Статистика",
     text: "Настольное приложение с данными OpenDota: форма за последние игры, винрейт и KDA по ролям и времени суток, темп добивания против эталонов, подбор героя против выбранных врагов. Собирается в готовый .exe.",
     tags: ["JavaScript", "Python", "OpenDota API", "Windows"],
-    link: { href: "https://github.com/iseedeadpeople792/dota2-stats", label: "Смотреть код" },
+    link: { href: "./stats/", label: "Открыть сайт проекта" },
+    repo: "https://github.com/iseedeadpeople792/dota2-stats",
     colors: ["#c77dff", "#ff7aa8"],
   },
   {

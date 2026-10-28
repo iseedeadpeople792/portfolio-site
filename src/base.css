@@ -1,0 +1,10 @@
+/* Общая основа для страниц проектов: сброс, шрифты, доступность. */
+* { box-sizing:border-box; }
+html { scroll-behavior:auto; }
+body { margin:0; font:400 18px/1.65 'Manrope',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+a { color:inherit; }
+h1,h2,h3,p { margin:0; }
+:focus-visible { outline:3px solid currentColor; outline-offset:4px; border-radius:6px; }
+.back { position:fixed; top:18px; left:clamp(16px,3vw,40px); z-index:50; font:500 .85rem 'JetBrains Mono',ui-monospace,Consolas,monospace; text-decoration:none; padding:8px 14px; border-radius:999px; backdrop-filter:blur(8px); }
+.bar { position:fixed; inset:0 0 auto 0; height:3px; transform:scaleX(0); transform-origin:0 50%; z-index:60; }
+@media (prefers-reduced-motion:reduce) { * { animation:none !important; } }

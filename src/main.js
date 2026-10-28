@@ -20,6 +20,7 @@ $("#track").innerHTML = projects
       <h3>${p.title}</h3>
       <p>${p.text}</p>
       ${p.link ? `<a class="go" href="${p.link.href}">${p.link.label}</a>` : `<span class="soon">Исходники пока не опубликованы</span>`}
+      ${p.repo ? `<a class="repo" href="${p.repo}">Исходники на GitHub</a>` : ""}
       <div class="tags">${p.tags.map((t) => `<span>${t}</span>`).join("")}</div>
     </div>
   </article>`

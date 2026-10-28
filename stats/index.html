@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dota 2 Статистика — приложение для Windows</title>
+<meta name="description" content="Настольное приложение с данными OpenDota: форма за последние игры, темп добивания против эталонов, подбор героя против выбранных врагов.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0c11'/%3E%3Cpath d='M5 22l7-8 5 5 10-12' stroke='%238b7bff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;700&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<script type="module" src="./main.js"></script>
+</head>
+<body>
+<div class="bar" aria-hidden="true"></div>
+<a class="back" href="../">← Портфолио</a>
+
+<header class="hero">
+  <div class="hero-text">
+    <p class="tag">Dota 2 · OpenDota · Windows</p>
+    <h1>Ваша статистика Dota 2 в одном окне</h1>
+    <p class="lead">Профиль, ранг, винрейт, форма за последние игры, темп добивания против эталонов и подбор героя против выбранных врагов. Данные берутся из OpenDota.</p>
+    <div class="actions">
+      <a class="btn main" id="download" href="https://github.com/iseedeadpeople792/dota2-stats" hidden>Скачать для Windows</a>
+      <a class="btn main" id="repo" href="https://github.com/iseedeadpeople792/dota2-stats">Код на GitHub</a>
+      <a class="btn ghost" href="#tabs">Что внутри</a>
+    </div>
+  </div>
+  <div class="win" aria-label="Пример окна приложения. Данные условные" role="img">
+    <div class="win-top"><span></span><span></span><span></span><em>Dota 2 Статистика</em></div>
+    <div class="win-tabs"><b class="on">Статистика</b><b>Динамика</b><b>Добивание</b><b>Пики</b></div>
+    <div class="win-body">
+      <div class="tiles">
+        <div><small>Винрейт</small><strong><span id="t1">0</span>%</strong></div>
+        <div><small>KDA</small><strong id="t2">0.0</strong></div>
+        <div><small>Игр</small><strong id="t3">0</strong></div>
+      </div>
+      <svg id="hero-chart" viewBox="0 0 520 190" preserveAspectRatio="none"></svg>
+      <p class="demo-note">Пример интерфейса, данные условные</p>
+    </div>
+  </div>
+</header>
+
+<section class="tabs" id="tabs">
+  <div class="tabs-pin">
+    <div class="tabs-list">
+      <h2>Пять вкладок</h2>
+      <ol id="tablist">
+        <li><b>Статистика</b><span>Профиль, ранг, винрейт, герои и последние матчи с разбором.</span></li>
+        <li><b>Динамика</b><span>Форма за 10, 20, 50 или 100 игр: скользящий винрейт и KDA, разрезы по ролям, стороне, времени суток и дням.</span></li>
+        <li><b>Добивание</b><span>Ваш темп добивания против эталонов OpenDota по героям (перцентили) и разбор по 5-й, 10-й и 15-й минутам.</span></li>
+        <li><b>Пики</b><span>Подбор героя против выбранных врагов: поправка на ваш ранг, «почему», «лучше не брать», популярные предметы.</span></li>
+        <li><b>Настройки</b><span>Свой API-ключ OpenDota, очистка кэша, запуск и остановка помощника добивания.</span></li>
+      </ol>
+    </div>
+    <div class="win big" aria-label="Пример вкладок приложения. Данные условные" role="img">
+      <div class="win-top"><span></span><span></span><span></span><em>Dota 2 Статистика</em></div>
+      <div class="win-tabs" id="mocktabs"><b>Статистика</b><b>Динамика</b><b>Добивание</b><b>Пики</b><b>⚙</b></div>
+      <div class="panes" id="panes"></div>
+      <p class="demo-note">Пример интерфейса, данные условные</p>
+    </div>
+  </div>
+</section>
+
+<section class="built">
+  <h2>Как устроено</h2>
+  <div class="cols">
+    <div><h3>Окно</h3><p>Обычная страница на HTML и JavaScript в окне WebView2. Python запускает окно и собирается в один .exe около 12 МБ.</p></div>
+    <div><h3>Данные</h3><p>Запросы к OpenDota идут прямо из страницы. Без ключа сервис пускает около 60 запросов в минуту, свой ключ снимает это ограничение. Ответы кэшируются.</p></div>
+    <div><h3>Помощник добивания</h3><p>Приложение запускает отдельный помощник и читает его статус из файла. Поэтому оно остаётся лёгким, а компьютерное зрение живёт в своём проекте.</p></div>
+  </div>
+  <ul class="nums">
+    <li><b data-to="5">0</b><span>вкладок</span></li>
+    <li><b data-to="45">0</b><span>автотестов на JavaScript</span></li>
+    <li><b data-to="12">0</b><span>МБ один файл</span></li>
+  </ul>
+</section>
+
+<footer class="end">
+  <p>JavaScript, Python, WebView2, OpenDota API.</p>
+  <p><a href="https://github.com/iseedeadpeople792/dota2-stats">Исходники</a><a href="../lasthit/">Помощник добивания</a><a href="../">Другие проекты</a></p>
+</footer>
+</body>
+</html>

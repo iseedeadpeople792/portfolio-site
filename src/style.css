@@ -64,6 +64,8 @@ main { position:relative; z-index:1; }
 .tags span { font:500 .78rem var(--mono); color:var(--peach); border:1px solid var(--line); border-radius:999px; padding:3px 11px; }
 .card a.go { font-weight:700; text-decoration:underline; text-decoration-color:var(--pink); text-decoration-thickness:2px; text-underline-offset:5px; width:max-content; transition:color .2s; }
 .card a.go:hover { color:var(--pink); }
+.card a.repo { font:500 .85rem var(--mono); color:var(--muted); text-decoration:none; width:max-content; transition:color .2s; }
+.card a.repo:hover { color:var(--ink); }
 .card .soon { font:500 .85rem var(--mono); color:var(--muted); }
 
 /* process */
