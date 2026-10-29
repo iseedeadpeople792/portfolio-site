@@ -140,31 +140,33 @@ main { position:relative; z-index:1; }
 
 /* animated covers */
 .visual .scene { position:absolute; inset:0; width:100%; height:100%; }
-.scene text { font-family:var(--display); }
+.visual .no { left:auto; right:22px; mix-blend-mode:difference; color:#fff; }
 .scene * { transform-box:fill-box; transform-origin:center; }
-.sc-hp { transform-origin:left center; animation:hp 3.2s ease-in-out infinite; }
-@keyframes hp { 0%,10% { transform:scaleX(1); } 70%,100% { transform:scaleX(.18); } }
-.sc-n { animation:pop 3.2s ease-in-out infinite; }
-@keyframes pop { 0%,60% { transform:scale(1); } 75% { transform:scale(1.25); } 100% { transform:scale(1); } }
-.sc-aim { animation:aim 3.2s ease-in-out infinite; }
-@keyframes aim { 0%,100% { transform:translateX(0) scale(1); } 70% { transform:translateX(-190px) scale(.8); } }
-.sc-bar { transform-origin:bottom; animation:bar 3s ease-in-out infinite; animation-delay:calc(var(--i) * .15s); }
-@keyframes bar { 0%,100% { transform:scaleY(.25); } 50% { transform:scaleY(1); } }
-.sc-line { stroke-dasharray:1; animation:draw 3s ease-in-out infinite; }
-@keyframes draw { 0% { stroke-dashoffset:1; } 60%,100% { stroke-dashoffset:0; } }
-.sc-pick { animation:pick 3s ease-in-out infinite; }
-@keyframes pick { 0%,40% { opacity:.3; } 55%,100% { opacity:1; } }
-.sc-tick { stroke-dasharray:1; animation:tick 3s ease-in-out infinite; }
-@keyframes tick { 0%,50% { stroke-dashoffset:1; } 70%,100% { stroke-dashoffset:0; } }
-.sc-long { animation:long 3s ease-in-out infinite; }
-@keyframes long { 0%,25% { transform:scaleX(1); opacity:.45; } 60%,100% { transform:scaleX(.28); opacity:0; } }
-.sc-short { animation:short 3s ease-in-out infinite; }
-@keyframes short { 0%,40% { transform:scaleX(0); } 70%,100% { transform:scaleX(1); } }
-.sc-scroll { animation:scrl 6s linear infinite; }
-@keyframes scrl { to { transform:translateY(-144px); } }
-.sc-day { opacity:.2; animation:day 4.2s linear infinite; animation-delay:calc(var(--i) * .2s); }
-@keyframes day { 0%,8% { opacity:.2; transform:scale(.7); } 14%,80% { opacity:.85; transform:scale(1); } 100% { opacity:.2; } }
-@media (prefers-reduced-motion:reduce) { .scene * { animation:none !important; } }
+.lh-grid { animation:lhg 2s linear infinite; }
+@keyframes lhg { to { transform:translateY(12px); } }
+.lh-c { animation:bob 2.4s ease-in-out infinite alternate; animation-delay:calc(var(--i) * -.6s); }
+@keyframes bob { to { transform:translateY(-4px); } }
+.lh-f { transform-origin:left center; animation:lhf 4s ease-in-out infinite; animation-delay:calc(var(--i) * -.9s); }
+@keyframes lhf { 0%,6% { transform:scaleX(1); fill:#e5535a; } 70% { transform:scaleX(.3); fill:#e5535a; } 76%,94% { transform:scaleX(.2); fill:#6ef08a; } 100% { transform:scaleX(1); fill:#e5535a; } }
+.lh-a { animation:lha 4s infinite; animation-delay:calc(var(--i) * -.9s); }
+@keyframes lha { 0%,68% { opacity:1; } 72%,100% { opacity:0; } }
+.lh-z { opacity:0; animation:lhz 4s infinite; animation-delay:calc(var(--i) * -.9s); }
+@keyframes lhz { 0%,68% { opacity:0; transform:scale(.6); } 76%,94% { opacity:1; transform:scale(1.2); } 98%,100% { opacity:0; } }
+.st-tab { animation:sttab 7s ease-in-out infinite; }
+@keyframes sttab { 0%,30% { transform:translateX(0); } 38%,63% { transform:translateX(54px); } 71%,96% { transform:translateX(108px); } 100% { transform:translateX(0); } }
+.st-line { stroke-dasharray:1; animation:stl 7s ease-in-out infinite; }
+@keyframes stl { 0%,30% { stroke-dashoffset:1; } 62%,92% { stroke-dashoffset:0; } 100% { stroke-dashoffset:1; } }
+.st-dot { animation:std 7s infinite; }
+@keyframes std { 0%,58% { opacity:0; } 64%,92% { opacity:1; } 98%,100% { opacity:0; } }
+.bt-pick { animation:btp 9s infinite; opacity:0; }
+@keyframes btp { 0%,36% { opacity:0; } 40%,90% { opacity:1; } 97%,100% { opacity:0; } }
+.bt-f1, .bt-f2, .bt-f3 { animation:bob 2.6s ease-in-out infinite alternate; }
+.bt-f2 { animation-delay:-.9s; } .bt-f3 { animation-delay:-1.7s; }
+.sh-long { transform-origin:left center; animation:shl 5s ease-in-out infinite; }
+@keyframes shl { 0% { transform:scaleX(1); opacity:0; } 6%,20% { transform:scaleX(1); opacity:1; } 46%,100% { transform:scaleX(.12); opacity:0; } }
+.hb-now { animation:hbn 1.4s ease-in-out infinite alternate; }
+@keyframes hbn { to { opacity:.15; } }
+@media (prefers-reduced-motion:reduce) { .scene * { animation:none !important; } .lh-z { opacity:0; } }
 
 /* card open + dialog */
 .card { cursor:pointer; }

@@ -4,8 +4,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { projects } from "./projects.js";
 import { L, lang, initI18n } from "./i18n.js";
-import { scene } from "./covers.js";
+import { scene, coverCss } from "./covers.js";
 
+document.head.append(Object.assign(document.createElement("style"), { textContent: coverCss }));
 gsap.registerPlugin(ScrollTrigger, SplitText);
 initI18n();
 
