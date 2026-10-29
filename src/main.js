@@ -41,7 +41,7 @@ const dlg = document.createElement("dialog");
 dlg.className = "pj";
 document.body.append(dlg);
 const open = (card) => {
-  dlg.innerHTML = `<button class="x" aria-label="${L("Закрыть", "Close")}">×</button>${card.innerHTML.replace(/<span class="more">.*?<\/span>/, "")}`;
+  dlg.innerHTML = `<button class="x" aria-label="${L("Закрыть", "Close")}">×</button><aside class="pj-does"><h4>${L("Что делает", "What it does")}</h4><ol>${projects[$$(".card").indexOf(card)].does[lang === "en" ? "en" : "ru"].map((t) => `<li>${t}</li>`).join("")}</ol></aside><div class="pj-main">${card.innerHTML.replace(/<span class="more">.*?<\/span>/, "")}</div>`;
   dlg.style.cssText = `--a:${card.style.getPropertyValue("--a")};--b:${card.style.getPropertyValue("--b")}`; // не весь style: в нём прозрачность и сдвиг от прокрутки
   dlg.showModal();
 };
