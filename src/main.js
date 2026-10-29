@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { projects } from "./projects.js";
 import { L, lang, initI18n } from "./i18n.js";
+import { scene } from "./covers.js";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 initI18n();
@@ -19,19 +20,33 @@ $("#track").innerHTML = projects
     const tr = (ru, en) => L(ru, en ?? ru);
     const tags = lang === "en" ? e.tags ?? p.tags : p.tags;
     return `
-  <article class="card" style="--a:${p.colors[0]};--b:${p.colors[1]}">
-    <div class="visual"><div class="art"></div><span class="no">${pad(i + 1)}</span></div>
+  <article class="card" tabindex="0" role="button" style="--a:${p.colors[0]};--b:${p.colors[1]}">
+    <div class="visual"><div class="art"></div>${scene(i)}<span class="no">${pad(i + 1)}</span></div>
     <div class="body">
       <h3>${tr(p.title, e.title)}</h3>
       <p>${tr(p.text, e.text)}</p>
       ${p.link ? `<a class="go" href="${p.link.href}">${tr(p.link.label, p.link.labelEn ?? "Open the project site")}</a>` : `<span class="soon">${L("Исходники пока не опубликованы", "Source not published yet")}</span>`}
       ${p.repo ? `<a class="repo" href="${p.repo}">${L("Исходники на GitHub", "Source on GitHub")}</a>` : ""}
       <div class="tags">${tags.map((t) => `<span>${t}</span>`).join("")}</div>
+      <span class="more">${L("Подробнее →", "Details →")}</span>
     </div>
   </article>`;
   })
   .join("");
 $("#tot").textContent = pad(projects.length);
+
+// Клик по карточке (не по её ссылкам) открывает окно с обложкой и полным описанием.
+const dlg = document.createElement("dialog");
+dlg.className = "pj";
+document.body.append(dlg);
+const open = (card) => {
+  dlg.innerHTML = `<button class="x" aria-label="${L("Закрыть", "Close")}">×</button>${card.innerHTML.replace(/<span class="more">.*?<\/span>/, "")}`;
+  dlg.style.cssText = card.getAttribute("style");
+  dlg.showModal();
+};
+$("#track").addEventListener("click", (e) => { const c = e.target.closest(".card"); if (c && !e.target.closest("a")) open(c); });
+$("#track").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches(".card")) open(e.target); });
+dlg.addEventListener("click", (e) => { if (e.target === dlg || e.target.closest(".x")) dlg.close(); });
 
 const mm = gsap.matchMedia();
 
