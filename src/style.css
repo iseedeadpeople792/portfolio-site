@@ -187,7 +187,7 @@ main { position:relative; z-index:1; }
 .pj-main { position:relative; min-width:0; }
 .pj-does { padding:30px 26px; background:color-mix(in srgb, var(--a) 12%, var(--bg)); border-right:1px solid var(--line); }
 .pj-does h4 { font:600 .8rem var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--peach); margin-bottom:18px; }
-.pj-does ol { list-style:none; counter-reset:s; display:flex; flex-direction:column; gap:16px; }
+.pj-does ol { list-style:none; padding:0; margin:0; counter-reset:s; display:flex; flex-direction:column; gap:16px; }
 .pj-does li { counter-increment:s; position:relative; padding-left:34px; font-size:.95rem; line-height:1.5; }
 .pj-does li::before { content:counter(s); position:absolute; left:0; top:0; width:24px; height:24px; border-radius:50%; background:var(--pink); color:var(--bg); font:700 .78rem/24px var(--mono); text-align:center; }
 @media (max-width:760px) { .pj[open] { grid-template-columns:1fr; } .pj-does { order:2; border-right:0; border-top:1px solid var(--line); } }
