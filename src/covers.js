@@ -12,7 +12,7 @@ export const covers = [
     `<path class="sc-line" d="M80 120 L132 90 L184 104 L236 60 L288 44" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>`,
   // 2: запись — слоты времени, один занимается
   n(6, (i) => `<rect class="${i === 3 ? "sc-slot sc-pick" : "sc-slot"}" x="${88 + (i % 3) * 78}" y="${52 + Math.floor(i / 3) * 52}" width="66" height="38" rx="12" fill="${ink}" opacity=".3"/>`) +
-    `<path class="sc-tick" d="M154 123 l8 8 16 -18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>`,
+    `<path class="sc-tick" d="M110 123 l8 8 16 -18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>`,
   // 3: сокращатель — длинная ссылка схлопывается в короткую
   `<rect class="sc-long" x="60" y="82" width="280" height="26" rx="13" fill="${ink}" opacity=".45"/>
    <rect class="sc-short" x="160" y="82" width="80" height="26" rx="13" fill="${ink}"/>`,
