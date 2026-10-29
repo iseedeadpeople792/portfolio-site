@@ -130,7 +130,7 @@ main { position:relative; z-index:1; }
   .counter { display:none; }
   .h-track { flex-direction:column; width:auto; padding:0 clamp(20px,5vw,72px); gap:20px; }
   .card { flex:none; height:auto; }
-  .visual { height:150px; }
+  .visual { height:150px; } .visual .no { font-size:2.2rem; top:10px; }
   .p-panel { grid-template-columns:1fr; gap:32px; padding-top:96px; }
   .hero-art { width:380px; margin-top:-190px; right:-130px; opacity:.55; } .fico, .c-plane { display:none; }
 }
