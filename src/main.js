@@ -42,7 +42,7 @@ dlg.className = "pj";
 document.body.append(dlg);
 const open = (card) => {
   dlg.innerHTML = `<button class="x" aria-label="${L("Закрыть", "Close")}">×</button>${card.innerHTML.replace(/<span class="more">.*?<\/span>/, "")}`;
-  dlg.style.cssText = card.getAttribute("style");
+  dlg.style.cssText = `--a:${card.style.getPropertyValue("--a")};--b:${card.style.getPropertyValue("--b")}`; // не весь style: в нём прозрачность и сдвиг от прокрутки
   dlg.showModal();
 };
 $("#track").addEventListener("click", (e) => { const c = e.target.closest(".card"); if (c && !e.target.closest("a")) open(c); });

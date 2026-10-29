@@ -176,6 +176,7 @@ main { position:relative; z-index:1; }
 .pj { border:0; padding:0; width:min(92vw,680px); max-height:90svh; overflow:auto; border-radius:28px; background:var(--bg); color:var(--ink); box-shadow:0 0 0 1px var(--line), 0 30px 90px rgba(0,0,0,.6); }
 .pj::backdrop { background:rgba(10,5,15,.75); backdrop-filter:blur(6px); }
 .pj .visual { height:220px; }
+.pj .no { display:none; }
 .pj .body { padding:26px 30px 32px; gap:14px; }
 .pj p { display:block; color:var(--muted); line-height:1.6; }
 .pj .x { position:absolute; right:14px; top:14px; z-index:2; width:40px; height:40px; border-radius:50%; border:0; background:rgba(26,16,32,.7); color:#fff; font-size:1.3rem; cursor:pointer; }
